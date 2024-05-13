@@ -4,6 +4,9 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def hello_world(request):
-    return Response({"message": "Hello, world!"})
+    if request.method == 'GET':
+        return Response({"message": "You hit GET method: Hello, world!"})
+    elif request.method == 'POST':
+        return Response({"message": "You hit POST method: Hello, world!"})
