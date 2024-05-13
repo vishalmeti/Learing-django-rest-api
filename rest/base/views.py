@@ -9,4 +9,9 @@ def hello_world(request):
     if request.method == 'GET':
         return Response({"message": "You hit GET method: Hello, world!"})
     elif request.method == 'POST':
-        return Response({"message": "You hit POST method: Hello, world!"})
+        data = request.data
+        print("-----------")
+        print(data)
+        print("-----------")
+        return Response({"message": "You hit POST method: Hello, world!",
+                         "data":data})
