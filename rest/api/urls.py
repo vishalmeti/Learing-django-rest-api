@@ -1,6 +1,7 @@
-from base.views import hello_world
+from base.views import users , updateUser
 from django.urls import path , include
 
 urlpatterns = [
-    path('',hello_world),
+    path('',users),
+    path('update/<int:id>',updateUser)
 ]
