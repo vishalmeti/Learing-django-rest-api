@@ -1,0 +1,4 @@
+To activate env -> 
+
+1) cd env/scripts
+2) activate
