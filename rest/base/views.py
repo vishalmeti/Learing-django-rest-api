@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from base.models import Student
+from base.models import Student, Book
 from base.serializers import serializer
 
 # Create your views here.
@@ -60,4 +60,14 @@ def updateUser(request, id):
     
     elif request.method == 'DELETE':
         student.delete()
-        return Response({"msg":"Deleted"})       
+        return Response({"msg":"Deleted"})   
+    
+
+@api_view(['GET'])
+def getBooks(request):
+    try:
+        books = Book.objects.all()
+        ser = serializer.BookSerializer(books, many=True)
+        return Response({"books": ser.data}, status=200)
+    except Exception as e:
+        return Response({'msg': 'Failed to fetch books', "error": str(e)}, status=500)
