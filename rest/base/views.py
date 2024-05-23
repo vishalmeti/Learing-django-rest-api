@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication 
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 from rest_framework.decorators import api_view
@@ -39,15 +40,9 @@ class StudentAPI(APIView):
         print("---------")
         return Response({"data": data})
     
+    #user register
     def post(self,request):
-        payload = request.data
-        serial = serializer.UserSerializer(data=payload)
-        if not serial.is_valid():
-            return Response({"message":"Something went wrong", "error": serial.errors})
-        
-        serial.save()
-        print('Request Data :',payload)
-        return Response({"message": "User created","data":payload})
+        pass
     
     def patch(self,request, id):
         try:
@@ -77,64 +72,6 @@ class StudentAPI(APIView):
         return Response({"msg":"Deleted","student":stud})   
         
         
-
-# @api_view(['GET','POST'])
-# def users(request):
-#     if request.method == 'GET':
-#         # to get the params from the url, we need to name the param into get function as a string
-#         paramData = request.GET.get('name')
-#         paramId = request.GET.get('id')
-#         data=''
-#         if paramData or paramId:
-#             try:
-#                 # student = User.objects.get(name = paramData)
-#                 student = User.objects.get(id = paramId)
-#                 data = serializer.StudentSerializer(student).data
-#             except:
-#                 return Response({"msg":"No Student found with id: "+str(paramId)})
-
-#         else:
-#             allStudent = User.objects.all()
-#             data=serializer.StudentSerializer(allStudent, many=True).data
-        
-        
-#         print("---------")
-#         print('Param :',paramData)
-#         print("---------")
-#         return Response({"data": data})
-#     elif request.method == 'POST':
-#         payload = request.data
-#         serial = serializer.StudentSerializer(data=payload)
-#         if not serial.is_valid():
-#             return Response({"message":"Something went wrong", "error": serial.errors})
-        
-#         serial.save()
-#         print("-----------")
-#         print('Request Data :',payload)
-#         print("-----------")
-#         return Response({"message": "Data added","data":payload})
-    
-# @api_view(['PATCH','DELETE'])
-# def updateUser(request, id):
-#     print(request.data)
-#     try:
-#         student = User.objects.get(id = id)
-#     except:
-#         return Response({"msg":"No Student found with id: "+str(id)})
-     
-#     if request.method == 'PATCH':   
-#         ser = serializer.StudentSerializer(student, data = request.data, partial = True)
-#         if not ser.is_valid():
-#             return Response({"error":ser.errors})
-        
-#         ser.save()
-#         return Response({"Student updated":ser.data})
-    
-#     elif request.method == 'DELETE':
-#         student.delete()
-#         return Response({"msg":"Deleted"})   
-    
-
 class BookAPI(APIView):
     
     authentication_classes = [JWTAuthentication]
@@ -164,3 +101,34 @@ class BookAPI(APIView):
     
     def delete(self, request):
         pass
+    
+class AuthAPI(APIView):
+    def get(self, request):
+        pass
+    
+    def post(self, request):
+        if 'login' in request.path:
+            user = User.objects.get(username = request.data['username'] )
+            new_token = RefreshToken.for_user(user)
+            return Response({"message": "User Logged in","Access Token":str(new_token.access_token)})
+        elif 'register' in request.path:
+            payload = request.data
+            serial = serializer.UserSerializer(data=payload)
+            if not serial.is_valid():
+                return Response({"message":"Something went wrong", "error": serial.errors})
+            
+            serial.save()
+            
+            user = User.objects.get(username = request.data['username'] )
+            new_token = RefreshToken.for_user(user)
+            print('Request Data :',payload)
+            return Response({"message": "User created","Access Token":str(new_token.access_token),"data":payload})
+        
+        elif 'logout' in request.path:
+            try:
+                refresh_token = request.data["refresh"]
+                print(refresh_token)
+                RefreshToken(refresh_token)
+                return Response({"message": "Successfully logged out."}, status=200)
+            except Exception as e:
+                return Response({"message": "Logout failed.", "error": str(e)}, status=400)
