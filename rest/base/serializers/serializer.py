@@ -1,15 +1,16 @@
 
 from base.models import Student, Book , Category
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 class StudentContactDetail(serializers.ModelSerializer):
     class Meta:
-        model = Student
-        fields = ['name','email','contact']
+        model = User
+        fields = ['username','email']
         
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Student
+        model = User
         fields = '__all__'
     
     def validate(self, data):

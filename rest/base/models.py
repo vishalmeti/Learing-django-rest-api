@@ -1,5 +1,5 @@
 # myapp/models.py
-
+from django.contrib.auth.models import User
 from django.db import models
 
 class Student(models.Model):
@@ -22,7 +22,7 @@ class Category(models.Model):
     
 class Book(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    owner = models.ForeignKey(Student, on_delete=models.CASCADE , default = 5, null=False , blank=False)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE , default=1, null=False, blank=False)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     

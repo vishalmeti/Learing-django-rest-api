@@ -2,6 +2,7 @@ from django.shortcuts import render
 from base.models import Student, Book
 from base.serializers import serializer
 from rest_framework.views import APIView
+from django.contrib.auth.models import User
 
 # Create your views here.
 from rest_framework.decorators import api_view
@@ -16,14 +17,14 @@ class StudentAPI(APIView):
         data=''
         if paramData or paramId:
             try:
-                # student = Student.objects.get(name = paramData)
-                student = Student.objects.get(id = paramId)
+                # student = User.objects.get(name = paramData)
+                student = User.objects.get(id = paramId)
                 data = serializer.StudentSerializer(student).data
             except:
                 return Response({"msg":"No Student found with id: "+str(paramId)})
 
         else:
-            allStudent = Student.objects.all()
+            allStudent = User.objects.all()
             data=serializer.StudentSerializer(allStudent, many=True).data
         
         
@@ -44,7 +45,7 @@ class StudentAPI(APIView):
     
     def patch(self,request, id):
         try:
-            student = Student.objects.get(id = id)
+            student = User.objects.get(id = id)
         except:
             return Response({"msg":"No Student found with id: "+str(id)})
      
@@ -60,7 +61,7 @@ class StudentAPI(APIView):
     
     def delete(self,request, id):
         try:
-            student = Student.objects.get(id = id)
+            student = User.objects.get(id = id)
         except:
             return Response({"msg":"No Student found with id: "+str(id)})
             
@@ -80,14 +81,14 @@ class StudentAPI(APIView):
 #         data=''
 #         if paramData or paramId:
 #             try:
-#                 # student = Student.objects.get(name = paramData)
-#                 student = Student.objects.get(id = paramId)
+#                 # student = User.objects.get(name = paramData)
+#                 student = User.objects.get(id = paramId)
 #                 data = serializer.StudentSerializer(student).data
 #             except:
 #                 return Response({"msg":"No Student found with id: "+str(paramId)})
 
 #         else:
-#             allStudent = Student.objects.all()
+#             allStudent = User.objects.all()
 #             data=serializer.StudentSerializer(allStudent, many=True).data
         
         
@@ -111,7 +112,7 @@ class StudentAPI(APIView):
 # def updateUser(request, id):
 #     print(request.data)
 #     try:
-#         student = Student.objects.get(id = id)
+#         student = User.objects.get(id = id)
 #     except:
 #         return Response({"msg":"No Student found with id: "+str(id)})
      
