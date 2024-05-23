@@ -4,12 +4,19 @@ from base.serializers import serializer
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication 
+
 # Create your views here.
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 
 class StudentAPI(APIView):
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         # to get the params from the url, we need to name the param into get function as a string
         paramId = request.GET.get('id')
@@ -129,9 +136,18 @@ class StudentAPI(APIView):
     
 
 class BookAPI(APIView):
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         try:
-            books = Book.objects.all()
+            if 'my-books' in request.path:
+                user = request.user
+                books = Book.objects.filter(owner=user.id)
+            else:
+                books = Book.objects.all()
+                
             ser = serializer.BookSerializer(books, many=True)
             return Response({"books": ser.data}, status=200)
         except Exception as e:

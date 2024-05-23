@@ -6,5 +6,6 @@ urlpatterns = [
     # path('',users),
     path('',StudentAPI.as_view()),
     path('update/<int:id>',StudentAPI.as_view()),
-    path('book',BookAPI.as_view())
+    path('books/',BookAPI.as_view()),
+    path('my-books/',BookAPI.as_view())
 ]
