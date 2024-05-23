@@ -98,7 +98,21 @@ class BookAPI(APIView):
             return Response({'msg': 'Failed to fetch books', "error": str(e)}, status=500)
     
     def patch(self, request,id):
-        pass
+        try:
+            book = Book.objects.get(id = id)
+        except:
+            return Response({"msg":"No book found with id: "+str(id)})
+        
+        book_detail = serializer.BookSerializer(book)
+        if book_detail.data['owner']['id'] != request.user.id :
+            return Response({"msg":"You do not have access to modify this Book: "+str(book_detail.data['title'])},status=401)
+     
+        ser = serializer.BookSerializer(book, data = request.data, partial = True)
+        if not ser.is_valid():
+            return Response({"error":ser.errors})
+        
+        ser.save()
+        return Response({"book updated":ser.data})
     
     def post(self, request):
         loggedin_User = request.user
