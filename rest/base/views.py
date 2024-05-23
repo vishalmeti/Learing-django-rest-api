@@ -82,10 +82,17 @@ class BookAPI(APIView):
             if 'my-books' in request.path:
                 user = request.user
                 books = Book.objects.filter(owner=user.id)
+            elif request.GET.get('id'):
+                paramId = request.GET.get('id')
+                book = Book.objects.get(id = paramId)
+                ser = serializer.BookFullDetailSerializer(book)
+                
+                return Response({"books": ser.data}, status=200)
+                                
             else:
                 books = Book.objects.all()
                 
-            ser = serializer.BookSerializer(books, many=True)
+            ser = serializer.BookFullDetailSerializer(books, many=True)
             return Response({"books": ser.data}, status=200)
         except Exception as e:
             return Response({'msg': 'Failed to fetch books', "error": str(e)}, status=500)
@@ -96,7 +103,6 @@ class BookAPI(APIView):
     def post(self, request):
         loggedin_User = request.user
         payload = request.data
-        # print(ser.data)
         payload["owner"]["id"] = loggedin_User.id
         try:
             ser = serializer.BookSerializer(data=payload,context={'request': request})

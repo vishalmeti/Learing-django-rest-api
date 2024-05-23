@@ -9,6 +9,9 @@ urlpatterns = [
     path('register/',AuthAPI.as_view()),
     path('logout/',AuthAPI.as_view()),
     path('update/<int:id>',StudentAPI.as_view()),
-    path('books/',BookAPI.as_view()),
+    
+    path('all-books/',BookAPI.as_view()),
+    path('add-books/',BookAPI.as_view()),
+    path('book/',BookAPI.as_view()),
     path('my-books/',BookAPI.as_view())
 ]

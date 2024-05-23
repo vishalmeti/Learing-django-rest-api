@@ -97,4 +97,10 @@ class BookSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
         validated_data['owner'] = self.context['request'].user
         return super().create(validated_data)
 
+class BookFullDetailSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    owner = StudentContactDetail()
+    class Meta:
+        model = Book 
+        fields = ['id', 'category', 'owner', 'title', 'description']
     
