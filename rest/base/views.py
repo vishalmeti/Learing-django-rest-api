@@ -28,7 +28,7 @@ class StudentAPI(APIView):
         
         
         print("---------")
-        print('Param :',paramData)
+        print('Param :',paramId)
         print("---------")
         return Response({"data": data})
     
@@ -40,7 +40,7 @@ class StudentAPI(APIView):
         
         serial.save()
         print('Request Data :',payload)
-        return Response({"message": "Data added","data":payload})
+        return Response({"message": "User created","data":payload})
     
     def patch(self,request, id):
         try:
