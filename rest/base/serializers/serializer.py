@@ -14,7 +14,7 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
     def validate(self, data):
-        if any(char.isdigit() for char in data['name']):
+        if any(char.isdigit() for char in data['username']):
             raise serializers.ValidationError({'error':'Name should not contain numbers'})
         
         return data

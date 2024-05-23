@@ -12,10 +12,9 @@ from rest_framework.response import Response
 class StudentAPI(APIView):
     def get(self, request):
         # to get the params from the url, we need to name the param into get function as a string
-        paramData = request.GET.get('name')
         paramId = request.GET.get('id')
         data=''
-        if paramData or paramId:
+        if paramId:
             try:
                 # student = User.objects.get(name = paramData)
                 student = User.objects.get(id = paramId)
