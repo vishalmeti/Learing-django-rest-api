@@ -128,7 +128,9 @@ class BookAPI(APIView):
         if ser.data['owner']['id'] != request.user.id :
             return Response({"msg":"You do not have access to modify this Book: "+str(ser.data['title'])},status=401)
             
-        book.delete()
+        else: 
+            book.delete()
+            
         return Response({"msg":"Book deleted: ", "Book":ser.data},status=200)
     
 class AuthAPI(APIView):
