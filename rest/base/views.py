@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from base.models import Student, Book
+from base.models import Student, Book , Category
 from base.serializers import serializer
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
@@ -94,7 +94,19 @@ class BookAPI(APIView):
         pass
     
     def post(self, request):
-        pass
+        loggedin_User = request.user
+        payload = request.data
+        # print(ser.data)
+        payload["owner"]["id"] = loggedin_User.id
+        try:
+            ser = serializer.BookSerializer(data=payload,context={'request': request})
+            if not ser.is_valid():
+                return Response({"msg":"Something went wrong","error":ser.errors})
+                
+            ser.save()
+            return Response({"Book added":ser.data}, status=201)
+        except Exception as e:
+            return Response({"msg":"Something went wrong","error":str(e)})
     
     def put(self, request):
         pass
