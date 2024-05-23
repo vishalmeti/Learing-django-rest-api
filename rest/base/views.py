@@ -97,7 +97,7 @@ class BookAPI(APIView):
         except Exception as e:
             return Response({'msg': 'Failed to fetch books', "error": str(e)}, status=500)
     
-    def patch(self, request):
+    def patch(self, request,id):
         pass
     
     def post(self, request):
@@ -117,8 +117,19 @@ class BookAPI(APIView):
     def put(self, request):
         pass
     
-    def delete(self, request):
-        pass
+    def delete(self, request,id):
+        try:
+            book = Book.objects.get(id = id)
+        except Exception as e:
+            return Response({"message":"Something went wrong", "error": str(e)})
+
+            
+        ser = serializer.BookSerializer(book)
+        if ser.data['owner']['id'] != request.user.id :
+            return Response({"msg":"You do not have access to modify this Book: "+str(ser.data['title'])},status=401)
+            
+        book.delete()
+        return Response({"msg":"Book deleted: ", "Book":ser.data},status=200)
     
 class AuthAPI(APIView):
     def get(self, request):

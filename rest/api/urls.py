@@ -13,5 +13,7 @@ urlpatterns = [
     path('all-books/',BookAPI.as_view()),
     path('add-books/',BookAPI.as_view()),
     path('book/',BookAPI.as_view()),
+    path('update-book/<int:id>',BookAPI.as_view()),
+    path('delete-book/<int:id>',BookAPI.as_view()),
     path('my-books/',BookAPI.as_view())
 ]
