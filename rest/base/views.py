@@ -128,11 +128,23 @@ class StudentAPI(APIView):
 #         return Response({"msg":"Deleted"})   
     
 
-@api_view(['GET'])
-def getBooks(request):
-    try:
-        books = Book.objects.all()
-        ser = serializer.BookSerializer(books, many=True)
-        return Response({"books": ser.data}, status=200)
-    except Exception as e:
-        return Response({'msg': 'Failed to fetch books', "error": str(e)}, status=500)
+class BookAPI(APIView):
+    def get(self, request):
+        try:
+            books = Book.objects.all()
+            ser = serializer.BookSerializer(books, many=True)
+            return Response({"books": ser.data}, status=200)
+        except Exception as e:
+            return Response({'msg': 'Failed to fetch books', "error": str(e)}, status=500)
+    
+    def patch(self, request):
+        pass
+    
+    def post(self, request):
+        pass
+    
+    def put(self, request):
+        pass
+    
+    def delete(self, request):
+        pass
