@@ -2,6 +2,11 @@
 from base.models import Student, Book , Category
 from rest_framework import serializers
 
+class StudentContactDetail(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['name','email','contact']
+        
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
@@ -17,8 +22,9 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category 
         fields = '__all__'
 class BookSerializer(serializers.ModelSerializer):
-    # category = CategorySerializer()
+    category = CategorySerializer()
+    owner = StudentContactDetail()
     class Meta:
         model = Book 
         fields = '__all__'
-        depth = 1
+        # depth = 1
