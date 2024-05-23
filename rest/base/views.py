@@ -34,7 +34,7 @@ class StudentAPI(APIView):
     
     def post(self,request):
         payload = request.data
-        serial = serializer.StudentSerializer(data=payload)
+        serial = serializer.UserSerializer(data=payload)
         if not serial.is_valid():
             return Response({"message":"Something went wrong", "error": serial.errors})
         
