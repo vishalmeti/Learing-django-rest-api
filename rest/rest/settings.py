@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-tj)wf4x=m-ix+$)-x#=2rq2&#dhu4l+nc5fhdc+x5qr#(26ejl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    # 'books-django-rest-api.onrender.com'
+    '*'
+]
 
 
 # Application definition
