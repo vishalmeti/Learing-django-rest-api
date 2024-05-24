@@ -155,7 +155,7 @@ class AuthAPI(APIView):
         if 'login' in request.path:
             user = User.objects.get(username = request.data['username'] )
             new_token = RefreshToken.for_user(user)
-            return Response({"message": "User Logged in","Access Token":str(new_token.access_token)})
+            return Response({"message": "User Logged in","AccessToken":str(new_token.access_token)})
         elif 'register' in request.path:
             payload = request.data
             serial = serializer.UserSerializer(data=payload)
