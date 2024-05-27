@@ -3,8 +3,10 @@ from base.models import Student, Book , Category
 from base.serializers import serializer
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
+from rest_framework import status
 
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.authentication import JWTAuthentication 
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -158,14 +160,27 @@ class AuthAPI(APIView):
     
     def post(self, request):
         if 'login' in request.path:
-            user = User.objects.get(username = request.data['username'] )
-            new_token = RefreshToken.for_user(user)
-            return Response({"message": "User Logged in","AccessToken":str(new_token.access_token)})
+            username = request.data.get('username')
+            password = request.data.get('password')
+            
+            if not username or not password:
+                return Response({"message": "Username and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                new_token = RefreshToken.for_user(user)
+                return Response({
+                    "message": "User Logged in",
+                    "AccessToken": str(new_token.access_token),
+                    "RefreshToken": str(new_token)
+                },status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
         elif 'register' in request.path:
             payload = request.data
             serial = serializer.UserSerializer(data=payload)
             if not serial.is_valid():
-                return Response({"message":"Something went wrong", "error": serial.errors})
+                return Response({"message":"Something went wrong", "error": serial.errors},status=status.HTTP_400_BAD_REQUEST)
             
             serial.save()
             
