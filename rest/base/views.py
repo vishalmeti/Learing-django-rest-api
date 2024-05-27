@@ -167,7 +167,7 @@ class AuthAPI(APIView):
             user = User.objects.get(username = request.data['username'] )
             new_token = RefreshToken.for_user(user)
             print('Request Data :',payload)
-            return Response({"message": "User created","Access Token":str(new_token.access_token),"data":payload})
+            return Response({"message": "User created","AccessToken":str(new_token.access_token),"data":payload})
         
         elif 'logout' in request.path:
             try:
