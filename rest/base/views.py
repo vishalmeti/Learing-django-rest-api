@@ -88,7 +88,12 @@ class BookAPI(APIView):
                 ser = serializer.BookFullDetailSerializer(book)
                 
                 return Response({"books": ser.data}, status=200)
-                                
+            elif request.GET.get('section'):
+                sectionId = request.GET.get('section')
+                FilteredCategory = Category.objects.get(id = sectionId)
+                books = Book.objects.filter(category = FilteredCategory)  
+                ser = serializer.BookFullDetailSerializer(books, many=True)
+                return Response({"books": ser.data}, status=200)               
             else:
                 books = Book.objects.all()
                 
